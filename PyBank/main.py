@@ -23,7 +23,6 @@ with open(csvpath, encoding='utf') as csvfile:
 
 # Skip the header
     csv_header = next(csvreader)
-    print(csvreader)
     
     for row in csvreader:
         if first_row is True:
@@ -52,20 +51,9 @@ with open(csvpath, encoding='utf') as csvfile:
             greatest_decrease[1] = net_change
 
 # Return the mean of those changes over that period of time
-mean_changes = sum(net_change_list) / len(month_of_change)
+mean_changes = sum(net_change_list) / (len(month_of_change) - 1)
 
 # Display the data in correct format in the terminal, and export as a text file with the results to the analysis folder
-print("Financial Analysis")
-print("---------------------------")
-print(f"Total Months: {total_months}")
-print(f"Total: ${total_net}")
-print(f"Average Change: ${mean_changes}")
-print(f"Greatest Increase in Profits:{greatest_increase[0]} (${greatest_increase[1]})")
-print(f"Greatest Decrease in Profits:{greatest_decrease[0]} (${greatest_decrease[1]})")
-
-
-
-
 with open(save_to, "w") as txt_file:
     results = (
         f"Financial Analysis\n"

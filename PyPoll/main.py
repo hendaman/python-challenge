@@ -2,61 +2,61 @@
 import os
 import csv
 
-# Read the csv file
-
+# Read the csv file/create path to save to
 csvpath = os.path.join('Resources', 'election_data.csv')
 
-# Define lists to be used
+save_to = os.path.join('analysis', 'election_results.txt')
+
+# Define variables
 total_votes = 0
-list_ballot_id = []
-list_county = []
+winning_count = 0
+winning_percentage = 0
 list_candidate = []
 candidate_votes = {}
 
 # Open the csv file
 with open(csvpath, encoding='utf') as csvfile:
     csvreader = csv.reader(csvfile, delimiter=',')
-    print(csvreader)
 
 # Skip the header
     csv_header = next(csvreader)
 
-
-
-# Calculate the total rows of data after the header by putting each column in lists
+# Calculate the total rows of data to work out vote count and store each candidate for each row
     for row in csvreader:
         total_votes += 1
         candidate = (row[2])
+# Use a list to store the unique candidates names if they aren't already in the list and count each vote against the candidate in a dictionary regardless of if they are already there
         if candidate not in list_candidate:
             list_candidate.append(candidate)
             candidate_votes[candidate] = 0
         candidate_votes[candidate] = candidate_votes[candidate] + 1
 
-        
-# Calculate total votes
-votes = (int(len(csv_header)))
-print(votes)
-
-# Determine all candidates that received votes
-
-list_ballot_id.append(row[0])
-list_county.append(row[1])
-
-# Calculate the total number of votes each candidate won
-
-
-
-# Calculate what percentage of all votes each candidate won
-
-
-
-# Determine the winner of the election based on who has the most votes
-
-
-
-
 # Display results in the terminal as per the correct format and export them to a text file
-print("Election Results")
-print("---------------------------")
-print(f"Total Votes: {votes}")
-print("---------------------------")
+with open(save_to, "w") as txt_file:
+    results1 = (f"Election Results\n"
+        f"---------------------------\n"
+        f"Total Votes: {total_votes}\n"
+        f"---------------------------\n")
+    
+    print(results1, end="")
+    txt_file.write(results1)
+
+    for candidate in candidate_votes:
+        votes = candidate_votes.get(candidate)
+        percentage = float(votes) / float(total_votes) * 100
+        results2 = (f"{candidate}: {percentage:.1f}% ({votes:,})\n")
+
+        print(results2)
+        txt_file.write(results2)
+
+        if (votes > winning_count) and (percentage > winning_percentage):
+            winning_count = votes
+            winning_candidate = candidate
+            winning_percentage = percentage
+
+    results3 = (f"---------------------------\n"
+                f"Winner: {winning_candidate}\n"
+                f"---------------------------\n")
+    
+    print(results3)
+    txt_file.write(results3)
